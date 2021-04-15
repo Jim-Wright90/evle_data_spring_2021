@@ -1,0 +1,198 @@
+---
+title: "EVLE"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: spacelab
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r setup 1, include=FALSE}
+library(tidyverse)
+library(rio)
+library(here)
+library(colorblindr)
+library(gghighlight)
+library(forcats)
+library(ggrepel)
+library(gt)
+library(knitr)
+library(kableExtra)
+library(reactable)
+library(plotly)
+library(SCVA)
+library(patchwork)
+
+
+theme_set(theme_minimal(15) +
+            theme(legend.position = "bottom",
+                  panel.grid.major.x = element_line(color = "gray60"),
+                  panel.grid.minor.x = element_blank(),
+                  panel.grid.major.y = element_blank())
+          )
+
+brief_parent <- import(here("data", "EVLE_brief_parent.xlsx"),
+               setclass = "tbl_df") 
+ 
+brief_self <- import(here("data", "EVLE_brief_self.xlsx"),
+               setclass = "tbl_df") 
+
+class_self_1 <- import(here("data", "EVLE_class_self_1.xlsx"),
+               setclass = "tbl_df") 
+
+class_self_2 <- import(here("data", "EVLE_class_self_2.xlsx"),
+               setclass = "tbl_df") 
+
+class_parent_1 <- import(here("data", "EVLE_class_parent_1.xlsx"),
+               setclass = "tbl_df") 
+
+class_parent_2 <- import(here("data", "EVLE_class_parent_2.xlsx"),
+               setclass = "tbl_df") 
+
+pcss <- import(here("data", "EVLE_pcss.xlsx"),
+               setclass = "tbl_df") 
+
+
+```
+
+
+### BRIEF-2 {.tabset .tabset-fade .tabset-pills}
+
+
+```{r, include=FALSE}
+head(brief_parent)
+head(brief_self)
+
+
+brief_self_scales <- c("Global Executive Composite",
+                  "Cognitive Regulation Index",
+                  "Plan/Organize Scale",
+                  "Working Memory Scale",
+                  "Task Completion Scale",
+                  "Emotional Regulation Index",
+                  "Emotional Control Scale",
+                  "Shift Scale",
+                  "Behavior Regulation Index",
+                  "Self-Monitor Scale",
+                  "Inhibit Scale")
+
+brief_parent_scales <- c("Global Executive Composite",
+                  "Cognitive Regulation Index",
+                  "Organization of Materials Scale",
+                  "Task-Monitor Scale",
+                  "Plan/Organize Scale",
+                  "Working Memory Scale",
+                  "Initiate Scale",
+                  "Emotional Regulation Index",
+                  "Emotional Control Scale",
+                  "Shift Scale",
+                  "Behavior Regulation Index",
+                  "Self-Monitor Scale",
+                  "Inhibit Scale")
+
+
+brief_tbl <- function(df) {
+  df %>% 
+  reactable(
+    columns = list(
+      `Scale/Index` = colDef(align = "center"),
+      `Score` = colDef(name = "Score",
+                                    align = "center")),
+    pagination = FALSE,
+    striped = TRUE,
+    outlined = TRUE,
+    compact = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    height = 600,
+    width = 500)
+}
+  
+brief_tbl(brief_self)
+brief_tbl(brief_parent)
+
+```
+
+#### BRIEF-2 Self-Report
+
+```{r, include=TRUE}
+brief_tbl(brief_self)
+```
+
+#### BRIEF-2 Parent Report
+
+```{r, include=TRUE}
+brief_tbl(brief_parent)
+```
+
+### CLASS {.tabset .tabset-fade .tabset-pills}
+
+```{r, include=FALSE}
+head(class_self_1)
+head(class_self_2)
+head(class_parent_1)
+head(class_parent_2)
+
+class_self_all <- bind_rows(class_self_1, class_self_2)
+class_parent_all <- bind_rows(class_parent_1, class_parent_2)
+
+class_tbl <- function(df) {
+  df %>% 
+  reactable(
+    columns = list(
+      `Question` = colDef(align = "center"),
+      `Response` = colDef(align = "center")),
+    pagination = FALSE,
+    striped = TRUE,
+    outlined = TRUE,
+    compact = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    searchable = TRUE,
+    height = 600,
+    width = 500)
+}
+```
+
+#### CLASS Self-Report 
+
+```{r, include=TRUE}
+class_tbl(class_self_all)
+```
+
+
+#### CLASS Parent Report 
+
+```{r, include=TRUE}
+class_tbl(class_parent_all)
+```
+
+### PCSS 
+
+```{r, include=FALSE}
+head(pcss)
+
+pcss_table <- pcss %>% 
+  reactable(
+    columns = list(
+      Symptom = colDef(align = "center"),
+      Score = colDef(align = "center")),
+    pagination = FALSE,
+    striped = TRUE,
+    outlined = TRUE,
+    compact = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    searchable = TRUE,
+    height = 600,
+    width = 600)
+```
+
+```{r, include=TRUE}
+pcss_table
+```
